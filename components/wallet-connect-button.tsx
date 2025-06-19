@@ -17,13 +17,26 @@ export function WalletConnectButton() {
 
   if (!isConnected) {
     return (
-      <Button
-        onClick={connect}
-        className="w-full bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 hover:from-purple-700 hover:via-blue-700 hover:to-cyan-700 text-white shadow-lg transition-all duration-200"
-      >
-        <Wallet className="mr-2 h-4 w-4" />
-        Connect Wallet
-      </Button>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            className="w-full bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 hover:from-purple-700 hover:via-blue-700 hover:to-cyan-700 text-white shadow-lg transition-all duration-200"
+          >
+            <Wallet className="mr-2 h-4 w-4" />
+            Connect Wallet
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-[200px]">
+          <DropdownMenuItem onClick={() => connect('metamask')}>
+            <img src="/metamask.svg" alt="MetaMask" className="w-4 h-4 mr-2" />
+            MetaMask
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => connect('circle')}>
+            <img src="/circle.svg" alt="Circle" className="w-4 h-4 mr-2" />
+            Circle Wallet
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     )
   }
 
@@ -68,8 +81,12 @@ export function WalletConnectButton() {
               <span className="text-white font-bold">M</span>
             </div>
             <div>
-              <p className="font-semibold">MetaMask</p>
-              <p className="text-xs text-muted-foreground">{address}</p>
+              <p className="font-semibold">
+                {address ? (
+                  `${address.slice(0, 6)}...${address.slice(-4)}`
+                ) : 'Not Connected'}
+              </p>
+              <p className="text-xs text-muted-foreground break-all">{address}</p>
             </div>
           </div>
           <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
@@ -84,16 +101,33 @@ export function WalletConnectButton() {
           </div>
         </div>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="cursor-pointer">
-          <Copy className="mr-2 h-4 w-4" />
+        <DropdownMenuItem 
+          className="cursor-pointer"
+          onClick={() => {
+            if (address) {
+              navigator.clipboard.writeText(address);
+            }
+          }}
+        >
+          <Copy className="w-4 h-4 mr-2" />
           Copy Address
         </DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer">
-          <ExternalLink className="mr-2 h-4 w-4" />
-          View on Etherscan
+        <DropdownMenuItem 
+          className="cursor-pointer"
+          onClick={() => {
+            if (address) {
+              window.open(`https://etherscan.io/address/${address}`, '_blank');
+            }
+          }}
+        >
+          <ExternalLink className="w-4 h-4 mr-2" />
+          View on Explorer
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={disconnect} className="cursor-pointer text-red-600 dark:text-red-400">
+        <DropdownMenuItem 
+          onClick={() => disconnect()}
+          className="cursor-pointer text-red-600 dark:text-red-400"
+        >
           <LogOut className="mr-2 h-4 w-4" />
           Disconnect
         </DropdownMenuItem>

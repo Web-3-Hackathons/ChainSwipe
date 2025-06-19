@@ -1,3 +1,6 @@
+"use client"
+
+import { useWallet } from "@/components/wallet-provider"
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
